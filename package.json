@@ -1,0 +1,18 @@
+{
+    "name": "familytree",
+    "version": "1.0.0",
+    "description": "This is my family tree",
+    "main": "index.js",
+    "scripts": {
+        "start": "",
+        "start:dev": "http-server &"
+    },
+    "keywords": [
+        "tree",
+        "d3",
+        "family-tree",
+        "familyTree"
+    ],
+    "author": "Hasan_Sh",
+    "license": "MIT"
+}

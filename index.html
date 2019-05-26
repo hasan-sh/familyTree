@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <title>Family Tree</title>
+        <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/icon?family=Material+Icons"
+        />
+        <link
+            rel="stylesheet"
+            href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css"
+        />
+        <script
+            defer
+            src="https://code.getmdl.io/1.3.0/material.min.js"
+        ></script>
+        <script src="https://d3js.org/d3.v5.min.js"></script>
+        <script src="data.json"></script>
+        <script src="index.js"></script>
+        <style>
+            .cardContainer {
+                display: flex;
+                justify-content: center;
+                padding: 20px;
+            }
+            .info {
+                margin: 10px;
+                text-align: center;
+            }
+            .info q {
+                color: rgba(0,0,0,.54);
+            }
+            .title {
+                border-bottom: 1px white solid;
+            }
+            .desc {
+                color: black;
+                margin: 0;
+                font-size: 16px;
+            }
+            .demo-card-square > .mdl-card__title {
+                color: #fff;
+                background: #46b6ac;
+            }
+            #tree {
+                overflow-x: auto;
+            }
+            @media (max-width: 500px) {
+                svg {
+                    width: 900px;
+                    margin-left: -80px;
+                    margin-top: 0px;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div
+            class="mdl-layout mdl-js-layout mdl-layout--fixed-header
+            mdl-layout--fixed-tabs"
+        >
+            <header class="mdl-layout__header" dir="rtl">
+                <div class="mdl-layout__header-row">
+                    <!-- Title -->
+                    <span class="mdl-layout-title title"
+                        >شجرة عائلة الشحود</span
+                    >
+                </div>
+                <!-- Tabs -->
+                <div class="mdl-layout__tab-bar mdl-js-ripple-effect">
+                    <a href="#fixed-tab-1" class="mdl-layout__tab is-active"
+                        >شجرة</a
+                    >
+                    <a href="#fixed-tab-2" class="mdl-layout__tab">معلومات</a>
+                </div>
+            </header>
+            <main class="mdl-layout__content" dir="rtl">
+                <section
+                    class="mdl-layout__tab-panel is-active"
+                    id="fixed-tab-1"
+                >
+                    <div class="page-content">
+                        <div id="tree" dir="ltr"></div>
+                    </div>
+                </section>
+                <section class="mdl-layout__tab-panel" id="fixed-tab-2">
+                    <div class="page-content">
+                        <div class="info">
+                            <h4 class="desc">
+                                هذه شجرة عائلة حسن شحود وأحفاده
+                            </h4>
+                            <q>سيتم إضافة معلومات أخرى لاحقاً...</q>
+                        </div>
+                        <div class="cardContainer">
+                            <div
+                                dir="rtl"
+                                class="demo-card-square mdl-card mdl-shadow--2dp"
+                            >
+                                <div class="mdl-card__title mdl-card--expand">
+                                    <h2 class="mdl-card__title-text">
+                                        إحصائيات
+                                    </h2>
+                                </div>
+                                <div class="mdl-card__supporting-text">
+                                    <div class="calc"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </body>
+</html>
