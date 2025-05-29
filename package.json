@@ -5,7 +5,7 @@
     "main": "index.js",
     "scripts": {
         "start": "",
-        "start:dev": "http-server &"
+        "start:dev": "npx http-server &"
     },
     "keywords": [
         "tree",

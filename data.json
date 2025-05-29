@@ -6,7 +6,7 @@
         "depthOffset": 0,
         "children": [
             {
-                "name": "محمد شحود",
+                "name": "محمد ",
                 "class": "man",
                 "children": [
                     {
@@ -73,7 +73,13 @@
                     },
                     {
                         "name": "حسن",
-                        "class": "man"
+                        "class": "man",
+                        "children": [
+                            {
+                                "name": "شمس",
+                                "class": "woman"
+                            }
+                        ]
                     },
                     {
                         "name": "يامن",
@@ -212,12 +218,22 @@
                             {
                                 "name": "راسل",
                                 "class": "man"
+                            },
+                            {
+                                "name": "ريبال",
+                                "class": "man"
                             }
                         ]
                     },
                     {
                         "name": "محمد",
-                        "class": "man"
+                        "class": "man",
+                        "children": [
+                            {
+                                "name": "سام",
+                                "class": "man"
+                            }
+                        ]
                     },
                     {
                         "name": "باسل",
@@ -230,12 +246,22 @@
                             {
                                 "name": "آدم",
                                 "class": "man"
+                            },
+                            {
+                                "name": "أحمد",
+                                "class": "man"
                             }
                         ]
                     },
                     {
                         "name": "حسام",
-                        "class": "man"
+                        "class": "man",
+                        "children": [
+                            {
+                                "name": "جمال",
+                                "class": "man"
+                            }
+                        ]
                     },
                     {
                         "name": "يزن",

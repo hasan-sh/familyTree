@@ -1,46 +1,54 @@
 console.log('This is our family tree!!');
-fetch('/data.json')
+// Vertical tree layout (top to bottom)
+fetch('./data.json')
     .then((res) => res.json())
     .then((data) => {
         const root = d3.hierarchy(data[0]);
         const diagonal = d3
-            .linkHorizontal()
-            .x((d) => d.y)
-            .y((d) => d.x);
+            .linkVertical()
+            .x(d => d.x)
+            .y(d => d.y);
 
-        const dx = 100;
-        const dy = 100;
+        const dx = 150;
+        const dy = 80;
         const tree = d3.tree().nodeSize([dx, dy]);
 
-        const margin = { top: 25, right: 120, bottom: 20, left: 150 };
+        const margin = { top: 80, right: 50, bottom: 80, left: 50 };
 
-        root.x0 = dy / 2;
+        const width = 1200;
+        const height = 800;
+
+        root.x0 = 0;
         root.y0 = 0;
         makeInformation(root);
+        // Store children and assign IDs
         root.descendants().forEach((d, i) => {
             d.id = i;
             d._children = d.children;
             if (d.depth && d.data.name.length !== 7) d.children = null;
         });
+        
 
-        const width = 1200;
 
         const svg = d3
             .create('svg')
-            .attr('width', width)
-            .attr('height', dx)
-            .attr('viewBox', [-margin.left, -margin.top, width, dx])
+            .attr('width', '100%')
+            .attr('height', height)
+            .attr('viewBox', [0, 0, width, height])
             .style('font', '18px sans-serif')
             .style('user-select', 'none');
+            
+        const mainGroup = svg.append('g')
+            .attr('transform', `translate(0, ${margin.top})`);
 
-        const gLink = svg
+        const gLink = mainGroup
             .append('g')
             .attr('fill', 'none')
             .attr('stroke', '#555')
             .attr('stroke-opacity', 0.6)
             .attr('stroke-width', 2.5);
 
-        const gNode = svg.append('g');
+        const gNode = mainGroup.append('g');
 
         function update(source) {
             const duration = d3.event && d3.event.altKey ? 2500 : 250;
@@ -49,6 +57,25 @@ fetch('/data.json')
 
             // Compute the new tree layout.
             tree(root);
+            
+            // First mirror positions for right-to-left layout
+            root.each(d => {
+                d.x = -d.x; // Flip horizontally
+            });
+            
+            // Then center the tree
+            let minX = Infinity, maxX = -Infinity;
+            root.each(d => {
+                minX = Math.min(minX, d.x);
+                maxX = Math.max(maxX, d.x);
+            });
+            
+            const treeWidth = maxX - minX;
+            const centerOffset = (width - treeWidth) / 2 - minX;
+            
+            root.each(d => {
+                d.x += centerOffset;
+            });
 
             let left = root;
             let right = root;
@@ -57,18 +84,14 @@ fetch('/data.json')
                 if (node.x > right.x) right = node;
             });
 
+            // Use calculated height
             const height = right.x - left.x + margin.top + margin.bottom;
 
             const transition = svg
                 .transition()
                 .duration(duration)
                 .attr('height', height)
-                .attr('viewBox', [
-                    -margin.left,
-                    left.x - margin.top,
-                    width,
-                    height
-                ])
+                .attr('viewBox', [0, 0, width, height])
                 .tween(
                     'resize',
                     window.ResizeObserver
@@ -89,13 +112,27 @@ fetch('/data.json')
                 .attr('cursor', (d) => (d._children ? 'pointer' : 'auto'))
                 .attr(
                     'transform',
-                    (d) => `translate(${source.y0},${source.x0})`
+                    (d) => `translate(${source.x0},${source.y0})`
                 )
                 .attr('fill-opacity', 0)
                 .attr('stroke-opacity', 0)
                 .on('click', (d) => {
-                    d.children = d.children ? null : d._children;
-                    update(d);
+                    // Only apply to parent nodes
+                    if (d._children || d.children) {
+                        // Close other open nodes at the same level
+                        if (d.depth === 1) {
+                            root.children.forEach(node => {
+                                if (node !== d && node.children) {
+                                    node.children = null;
+                                }
+                            });
+                        }
+                        // Toggle current node
+                        d.children = d.children ? null : d._children;
+                        
+
+                        update(d);
+                    }
                 });
 
             // nodeEnter
@@ -107,7 +144,10 @@ fetch('/data.json')
                 .append('text')
                 .attr('dy', '0.11em')
                 // .attr('x', (d) => (d._children ? -6 : 6))
-                .attr('x', (d) => d.id === 0 ? -10 : 0)
+                .attr('x', 0)
+                .attr('y', 20)
+                .attr('text-anchor', 'middle')
+                // .attr('direction', 'rtl')
                 // .attr('text-anchor', (d) => (d._children ? 'end' : 'start'))
                 // .attr('text-anchor', (d) => 'start')
                 .text((d) => d.data.name)
@@ -121,7 +161,7 @@ fetch('/data.json')
             const nodeUpdate = node
                 .merge(nodeEnter)
                 .transition(transition)
-                .attr('transform', (d) => `translate(${d.y},${d.x})`)
+                .attr('transform', (d) => `translate(${d.x},${d.y})`)
                 .attr('fill-opacity', 1)
                 .attr('stroke-opacity', 1);
 
@@ -130,7 +170,7 @@ fetch('/data.json')
                 .exit()
                 .transition(transition)
                 .remove()
-                .attr('transform', (d) => `translate(${source.y},${source.x})`)
+                .attr('transform', (d) => `translate(${source.x},${source.y})`)
                 .attr('fill-opacity', 0)
                 .attr('stroke-opacity', 0);
 
