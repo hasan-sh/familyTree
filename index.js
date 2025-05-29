@@ -135,10 +135,15 @@ fetch('./data.json')
                     }
                 });
 
-            // nodeEnter
-            //     .append('circle')
-            //     .attr('r', d => d.id === 0 ? 2.5 : 0)
-            //     .attr('fill', (d) => (d._children ? '#555' : '#999'));
+            // Add child count text
+            nodeEnter
+                .append('text')
+                .attr('dy', '-0.1em')
+                .attr('x', -5)
+                .attr('text-anchor', 'middle')
+                .attr('font-size', '10px')
+                .attr('fill', '#666')
+                .text(d => d._children ? d._children.length : (d.children ? d.children.length : ''));
 
             nodeEnter
                 .append('text')
